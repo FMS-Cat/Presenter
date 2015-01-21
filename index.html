@@ -36,6 +36,7 @@
 
 			body
 			{
+				background:#222222;
 			}
 
 			a
@@ -204,7 +205,6 @@
 					data = {
 						title : 'Untitled',
 						font : '700 64px/1.2 Arial',
-						background : '#222',
 						slides : [
 							$.extend(true,{},template)
 						]
@@ -296,6 +296,7 @@
 					$('#head').html(txt(head));
 					$('#foot').html(txt(foot));
 					if(print)console.log('%c'+print,'color:#FF0066');
+					$('body').css({background:colorFunc(color)});
 					$('#sound').remove();
 					if(sound){
 						$('body').append('<audio id="sound" src="media/'+sound+'" autoplay>');
@@ -431,12 +432,6 @@
 								localStorage.setItem('presenterData',JSON.stringify(data));
 								resize();
 							}
-							if(command == 'BG' || command == 'BACKGROUND'){
-								var background = prompt('Enter the background settings',data.background);
-								if(background){data.background = background;}
-								localStorage.setItem('presenterData',JSON.stringify(data));
-								resize();
-							}
 							if(command == 'FIRST'){
 								turn(0);
 							}
@@ -471,7 +466,6 @@
 									PUBLISH : Save slides for public as html\n\
 									TITLE : Change the title\n\
 									FONT : Change the default font settings\n\
-									BG : Change the default background settings\n\
 									FIRST : Jump to first slide\n\
 									RANDOM : Jump to random slide\n\
 									REVERSE : Reverse order of slides\n\
@@ -685,8 +679,6 @@
 					});
 
 					$('title').html(data.title);
-					$('body').css({'background':colorFunc(data.background)});
-					$('body').css({background:colorFunc(color)});
 					$('.text').css({'font':data.font});
 				}
 				resize();
