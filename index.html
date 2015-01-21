@@ -36,7 +36,6 @@
 
 			body
 			{
-				background:#222222;
 			}
 
 			a
@@ -49,9 +48,6 @@
 			{
 				position:fixed;
 				text-align:center;
-				line-height:1.2;
-				font-family:"Arial";
-				font-weight:700;
 			}
 
 			.input
@@ -207,7 +203,8 @@
 				if(!data){
 					data = {
 						title : 'Untitled',
-						font : '小塚ゴシック Pro',
+						font : '700 64px/1.2 Arial',
+						background : '#222',
 						slides : [
 							$.extend(true,{},template)
 						]
@@ -430,8 +427,14 @@
 								resize();
 							}
 							if(command == 'FONT'){
-								var font = prompt('Enter the font-family',data.font);
+								var font = prompt('Enter the font settings',data.font);
 								if(font){data.font = font;}
+								localStorage.setItem('presenterData',JSON.stringify(data));
+								resize();
+							}
+							if(command == 'BG' || command == 'BACKGROUND'){
+								var background = prompt('Enter the background settings',data.background);
+								if(background){data.background = background;}
 								localStorage.setItem('presenterData',JSON.stringify(data));
 								resize();
 							}
@@ -468,7 +471,8 @@
 									SAVE : Save slides as json\n\
 									PUBLISH : Save slides for public as html\n\
 									TITLE : Change the title\n\
-									FONT : Change the default font\n\
+									FONT : Change the default font settings\n\
+									BG : Change the default background settings\n\
 									FIRST : Jump to first slide\n\
 									RANDOM : Jump to random slide\n\
 									REVERSE : Reverse order of slides\n\
@@ -682,7 +686,8 @@
 					});
 
 					$('title').html(data.title);
-					$('.text').css({'font-family':data.font});
+					$('body').css({'background':data.background});
+					$('.text').css({'font':data.font});
 				}
 				resize();
 				window.onresize = resize;
