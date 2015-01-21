@@ -203,7 +203,7 @@
 					sound : ""
 				}
 
-				var data = JSON.parse(localStorage.getItem('data'));
+				var data = JSON.parse(localStorage.getItem('presenterData'));
 				if(!data){
 					data = {
 						title : 'Untitled',
@@ -213,7 +213,7 @@
 						]
 					};
 				}
-				localStorage.setItem('data',JSON.stringify(data));
+				localStorage.setItem('presenterData',JSON.stringify(data));
 
 				function txt(_i){
 					var ret=_i;
@@ -334,7 +334,7 @@
 					var blob = new Blob([JSON.stringify(data)],{type:"application/json"});
 					var url = URL.createObjectURL(blob);
 					a.href = url;
-					a.download = ''+data.title+'.json';
+					a.download = ''+data.title+(+new Date())+'.json';
 					a.click();
 					URL.revokeObjectURL(url);
 				}
@@ -426,13 +426,13 @@
 							if(command == 'TITLE'){
 								var title = prompt('Enter the title',data.title);
 								data.title = title;
-								localStorage.setItem('data',JSON.stringify(data));
+								localStorage.setItem('presenterData',JSON.stringify(data));
 								resize();
 							}
 							if(command == 'FONT'){
 								var font = prompt('Enter the font-family',data.font);
 								if(font){data.font = font;}
-								localStorage.setItem('data',JSON.stringify(data));
+								localStorage.setItem('presenterData',JSON.stringify(data));
 								resize();
 							}
 							if(command == 'FIRST'){
@@ -502,7 +502,7 @@
 								if(confirm('Delete: Really?')){
 									turn(page-1);
 									data.slides.splice(page+1,1);
-									localStorage.setItem('data',JSON.stringify(data));
+									localStorage.setItem('presenterData',JSON.stringify(data));
 									resize();
 								}
 							}
@@ -510,7 +510,7 @@
 						if(k == 77){ // m
 							data.slides.splice(page+1,0,$.extend(true,{},data.slides[page]));
 							turn(page+1);
-							localStorage.setItem('data',JSON.stringify(data));
+							localStorage.setItem('presenterData',JSON.stringify(data));
 							resize();
 						}
 					}
@@ -571,7 +571,7 @@
 					var main = $('#inputMain').val();
 					$('#main').html(txt(main));
 					data.slides[page].main = main;
-					localStorage.setItem('data',JSON.stringify(data));
+					localStorage.setItem('presenterData',JSON.stringify(data));
 					resize();
 				});
 
@@ -579,7 +579,7 @@
 					var head = $('#inputHead').val();
 					$('#head').html(txt(head));
 					data.slides[page].head = head;
-					localStorage.setItem('data',JSON.stringify(data));
+					localStorage.setItem('presenterData',JSON.stringify(data));
 					resize();
 				});
 
@@ -587,14 +587,14 @@
 					var foot = $('#inputFoot').val();
 					$('#foot').html(txt(foot));
 					data.slides[page].foot = foot;
-					localStorage.setItem('data',JSON.stringify(data));
+					localStorage.setItem('presenterData',JSON.stringify(data));
 					resize();
 				});
 
 				$(document).on('keydown keyup change','#inputPrint',function(e){
 					var print = $('#inputPrint').val();
 					data.slides[page].print = print;
-					localStorage.setItem('data',JSON.stringify(data));
+					localStorage.setItem('presenterData',JSON.stringify(data));
 					resize();
 				});
 
@@ -602,14 +602,14 @@
 					var color = $('#inputColor').val();
 					$('body').css({background:colorFunc(color)});
 					data.slides[page].color = color;
-					localStorage.setItem('data',JSON.stringify(data));
+					localStorage.setItem('presenterData',JSON.stringify(data));
 					resize();
 				});
 
 				$(document).on('keydown keyup change','#inputSound',function(e){
 					var sound = $('#inputSound').val();
 					data.slides[page].sound = sound;
-					localStorage.setItem('data',JSON.stringify(data));
+					localStorage.setItem('presenterData',JSON.stringify(data));
 					resize();
 				});
 
