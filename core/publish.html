@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Presenter</title>
+    <style type="text/css">
+      *
+      {
+        color:#EEEEEE;
+        margin:0;
+        padding:0;
+      }
+
+      .text::selection
+      {
+        background:none;
+      }
+
+      body
+      {
+        background:#222222;
+      }
+
+      a
+      {
+        color:#CCCCCC;
+        font-weight:bold;
+      }
+
+      .text
+      {
+        position:fixed;
+        text-align:center;
+        line-height:1.2;
+        font-family:"Arial";
+        font-weight:700;
+      }
+
+      #frame
+      {
+        position:fixed;
+        background:#FFFFFF;
+        border:solid 1px #FF0066;
+        opacity:0;
+        width:1280px;
+        height:720px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="frame"></div>
+    <div class="text" id="head"></div>
+    <div class="text" id="foot"></div>
+    <div class="text" id="main"></div>
+    <audio src="" id="sound"></audio>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script>
+      $(function(){
+        var data = JSON.parse(dec64($('json').html()));
+
+        function dec64(_str){
+          return decodeURIComponent(escape(atob(_str)));
+        }
+
+        function txt(_i){
+          var ret=_i;
+
+          while(/#%/.test(ret)){
+            ret=ret.replace(/#%/,'<br />');
+          }
+
+          while(/#(?!#)([\w,\.\-]+)#(?!#)/.test(ret)){
+            var ret=ret.replace(/#(?!#)([\w,\.\-]+)#(?!#)/,function(i){
+              var r='';
+              i=i.substring(1,i.length-1);
+              var a=i.split(',');
+              for(var c=0;c<a.length;c++){
+                var s=a[c].charAt(0);
+                var v=a[c].substring(1);
+                if(s=='f'){
+                  if(v=='b'){v='\'Bebas Neue\'';}
+                  if(v=='c'){v='\'Comic Sans MS\'';}
+                  if(v=='r'){v='\'Ricty Diminished\'';}
+                  r+='font-family:'+v+';';
+                }
+                if(s=='b'){r+='background:##'+v+';';}
+                if(s=='c'){r+='color:##'+v+';';}
+                if(s=='s'){r+='font-size:'+v+'px;';}
+                if(s=='l'){r+='line-height:'+v+'px;';}
+                if(s=='o'){r+='opacity:'+v/100+';';}
+                if(s=='B'){r+='font-weight:bold;';}
+                if(s=='I'){r+='font-style:italic;';}
+                if(s=='N'){r+='font-weight:normal;';}
+              }
+              r='</span><span style="'+r+'">';
+              return r;
+            });
+          }
+          while(/#/.test(ret)){
+            ret=ret.replace(/#/,'</span><span>');
+          }
+          while(/<\/span><span><\/span><span>/.test(ret)){
+            ret=ret.replace(/<\/span><span><\/span><span>/,'#');
+          }
+          return '<span>'+ret+'</span>';
+        }
+
+        function colorFunc(_i){
+          var ret = _i;
+          try{
+            if(ret.substring(0,1).toLowerCase() == 'h' && ret.length == 4){
+              var h = parseInt(ret.substring(1,2),16);
+              var s = parseInt(ret.substring(2,3),16);
+              var l = parseInt(ret.substring(3,4),16);
+              ret = 'hsl('+h/16*360+','+s/16*100+'%,'+l/16*100+'%)';
+            }else if(ret.substring(0,1).toLowerCase() == 'h' && ret.length == 7){
+              var h = parseInt(ret.substring(1,3),16);
+              var s = parseInt(ret.substring(3,5),16);
+              var l = parseInt(ret.substring(5,7),16);
+              ret = 'hsl('+h/256*360+','+s/256*100+'%,'+l/256*100+'%)';
+            }else if(ret.toLowerCase() == 'xampanoid'){
+              ret = '#FF0066';
+            }
+          }catch(e){
+          }
+          return ret;
+        }
+
+        var page = 0;
+        function turn(_page){
+          if(_page<0 || data.slides.length<=_page){return;}
+          page = _page;
+          console.log(page+1+" / "+data.slides.length+" : "+Math.floor(page/(data.slides.length-1)*100)+" %");
+          $('#inputPage').val(page);
+
+          var main = data.slides[page].main;
+          var head = data.slides[page].head;
+          var foot = data.slides[page].foot;
+          var print = data.slides[page].print;
+          var color = data.slides[page].color;
+          var sound = data.slides[page].sound;
+
+          $('#main').html(txt(main));
+          $('#head').html(txt(head));
+          $('#foot').html(txt(foot));
+          if(print)console.log('%c'+print,'color:#FF0066');
+          $('body').css({background:colorFunc(color)});
+          $('#sound').remove();
+          if(sound){
+            $('body').append('<audio id="sound" src="media/'+sound+'" autoplay>');
+          }
+
+          $('#inputMain').val(main);
+          $('#inputHead').val(head);
+          $('#inputFoot').val(foot);
+          $('#inputPrint').val(print);
+          $('#inputColor').val(color);
+          $('#inputSound').val(sound);
+          resize();
+        }
+        turn(0);
+
+        $(document).on('keydown','body',function(e){
+          if(e.keyCode == 37){ // left
+            turn(page-1);
+          }
+          if(e.keyCode == 39){ // right
+            turn(page+1);
+          }
+        });
+
+        function resize(){
+          var W = $(window).width();
+          var H = $(window).height();
+
+          $('#main').css({
+            left:0,
+            top:H/2-$('#main').height()/2,
+            width:W
+          });
+
+          $('#head').css({
+            top:H/2-340,
+            left:0,
+            width:W
+          });
+
+          $('#foot').css({
+            bottom:H/2-340,
+            left:0,
+            width:W
+          });
+
+          $('#frame').css({
+            left:W/2-640,
+            top:H/2-360
+          });
+
+          $('#inputMain').css({
+            width:W-16,
+          });
+
+          $('#inputPrint').css({
+            width:W*.5-12,
+            left:0
+          });
+
+          $('#inputHead').css({
+            width:W*.2-12,
+            left:W*.5
+          });
+
+          $('#inputFoot').css({
+            width:W*.2-12,
+            left:W*.7
+          });
+
+          $('#inputColor').css({
+            width:W*.05-12,
+            left:W*.9
+          });
+
+          $('#inputSound').css({
+            width:W*.05-16,
+            left:W*.95
+          });
+
+          $('#command').css({
+            left:0,
+            top:H/2-$('#command').height()/2,
+            width:W
+          });
+
+          $('title').html(data.title);
+          $('.text').css({'font-family':data.font});
+        }
+        resize();
+        window.onresize = resize;
+      });
+    </script>
+  </body>
+</html>
