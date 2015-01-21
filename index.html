@@ -296,7 +296,6 @@
 					$('#head').html(txt(head));
 					$('#foot').html(txt(foot));
 					if(print)console.log('%c'+print,'color:#FF0066');
-					$('body').css({background:colorFunc(color)});
 					$('#sound').remove();
 					if(sound){
 						$('body').append('<audio id="sound" src="media/'+sound+'" autoplay>');
@@ -686,7 +685,8 @@
 					});
 
 					$('title').html(data.title);
-					$('body').css({'background':data.background});
+					$('body').css({'background':colorFunc(data.background)});
+					$('body').css({background:colorFunc(color)});
 					$('.text').css({'font':data.font});
 				}
 				resize();
