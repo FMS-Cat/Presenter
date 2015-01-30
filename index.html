@@ -200,16 +200,14 @@
 					sound : ""
 				}
 
-				var data = JSON.parse(localStorage.getItem('presenterData'));
-				if(!data){
-					data = {
+				var data = loadData(
+					JSON.parse(localStorage.getItem('presenterData')),
+					{
 						title : 'Untitled',
-						font : '700 64px/1.2 Arial',
-						slides : [
-							$.extend(true,{},template)
-						]
-					};
-				}
+						font : '700 64px/1.2 Helvetica Neue',
+						slides : [$.extend(true,{},template)]
+					}
+				);
 				localStorage.setItem('presenterData',JSON.stringify(data));
 
 				function txt(_i){
@@ -684,6 +682,15 @@
 				resize();
 				window.onresize = resize;
 			});
+
+			function loadData(_load,_def){
+				var data = _load;
+				if(!data){ data = {}; }
+				for(var i in _def){
+					if(!data[i]){ data[i] = _def[i]; }
+				}
+				return data;
+			}
 		</script>
 	</body>
 </html>
