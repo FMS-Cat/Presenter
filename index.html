@@ -7,14 +7,14 @@
 		<style type="text/css">
 			@font-face
 			{
-				font-family:'mono';
-				src:url('core/UbuntuMono-R.ttf');
+				font-family:"mono";
+				src:url("core/UbuntuMono-R.ttf");
 			}
 
 			@font-face
 			{
 				font-family:'fami';
-				src:url('core/FAMania2.6.TTF');
+				src:url("core/FAMania2.6.TTF");
 			}
 
 			*
@@ -31,18 +31,34 @@
 
 			.input::selection
 			{
-				background:#CCCCCC;
+				background:#CCC;
 			}
 
 			body
 			{
-				background:#222222;
+				background:#222;
 			}
 
 			a
 			{
-				color:#CCCCCC;
+				color:#CCC;
 				font-weight:bold;
+			}
+
+			code
+			{
+				line-height : 1;
+				font-family : "mono";
+				background : #333;
+				border : 1px solid #444;
+				border-radius : 4px;
+				width : 1000px;
+				text-align : left;
+				padding : 8px;
+				margin : auto;
+				display : block;
+				unicode-bidi : embed;
+				white-space : pre;
 			}
 
 			.text
@@ -130,7 +146,7 @@
 				left:-200px;
 				top:8px;
 				opacity:.3;
-				font-family:'mono';
+				font-family:"mono";
 			}
 
 			#command
@@ -138,7 +154,7 @@
 				position:fixed;
 				text-align:center;
 				font-size:128px;
-				font-family:'fami';
+				font-family:"fami";
 				line-height:1.2;
 				color:#FFFFFF;
 				opacity:1;
@@ -215,6 +231,10 @@
 
 					while(/#%/.test(ret)){
 						ret=ret.replace(/#%/,'<br />');
+					}
+
+					while(/#&/.test(ret)){
+						ret=ret.replace(/#&/,'&nbsp;');
 					}
 
 					while(/#(?!#)([\w,\.\-]+)#(?!#)/.test(ret)){
@@ -376,6 +396,7 @@
 				}
 
 				$(document).on('keydown','body',function(_e){
+					console.log(_e);
 					var k = _e.keyCode;
 
 					if(k == 27){ // esc
@@ -479,7 +500,7 @@
 						_e.preventDefault();
 						resize();
 					}
-					else if(_e.ctrlKey){
+					else if(_e.metaKey){
 						if($(':focus').is('.input')){
 							if(k == 37){ // left
 								if(_e.shiftKey){data.slides.splice(page-1,2,data.slides[page],data.slides[page-1]);}
@@ -501,12 +522,14 @@
 									resize();
 								}
 							}
+							_e.preventDefault();
 						}
 						if(k == 77){ // m
 							data.slides.splice(page+1,0,$.extend(true,{},data.slides[page]));
 							turn(page+1);
 							localStorage.setItem('presenterData',JSON.stringify(data));
 							resize();
+							_e.preventDefault();
 						}
 					}
 					else if(!$(':focus').is('.input')){
