@@ -248,7 +248,8 @@
 								if(s=='f'){
 									if(v=='b'){v='\'Bebas Neue\'';}
 									if(v=='c'){v='\'Comic Sans MS\'';}
-									if(v=='r'){v='\'Ricty Diminished\'';}
+									if(v=='f'){v='\'fami\'';}
+									if(v=='m'){v='\'mono\'';}
 									r+='font-family:'+v+';';
 								}
 								if(s=='b'){r+='background:##'+v+';';}
@@ -354,23 +355,6 @@
 					URL.revokeObjectURL(url);
 				}
 
-				function publish(){
-					$.get('core/publish.html',function(_data){
-						var plusdata = '<json style="display:none">'+enc64(JSON.stringify(data))+'</json>\n'+_data;
-						var a = document.createElement('a');
-						var blob = new Blob([plusdata],{type:"text/html"});
-						var url = URL.createObjectURL(blob);
-						a.href = url;
-						a.download = ''+data.title+'.html';
-						a.click();
-						URL.revokeObjectURL(url);
-					});
-
-					function enc64(_str){
-						return window.btoa(unescape(encodeURIComponent(_str)));
-					}
-				}
-
 				function shuffle(_a){
 					var a = $.extend(true,[],_a);
 					for(var i=0; i<a.length; i++){
@@ -435,9 +419,6 @@
 							}
 							if(command == 'SAVE'){
 								save();
-							}
-							if(command == 'PUBLISH'){
-								publish();
 							}
 							if(command == 'TITLE'){
 								var title = prompt('Enter the title',data.title);
