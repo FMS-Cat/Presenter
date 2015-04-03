@@ -5,50 +5,39 @@
 		<meta charset="UTF-8">
 		<title>Presenter</title>
 		<style type="text/css">
-			@font-face
-			{
-				font-family:"mono";
-				src:url("core/UbuntuMono-R.ttf");
-			}
-
-			@font-face
-			{
-				font-family:'fami';
-				src:url("core/FAMania2.6.TTF");
-			}
-
 			*
 			{
-				color:#EEEEEE;
-				margin:0;
-				padding:0;
+				color : #EEEEEE;
+				margin  :0;
+				padding : 0;
 			}
 
 			::selection
 			{
-				background:none;
+				background : none;
 			}
 
 			.input::selection
 			{
-				background:#CCC;
+				background : #CCC;
 			}
 
 			body
 			{
-				background:#222;
+				background : #222;
 			}
 
 			a
 			{
-				color:#CCC;
-				font-weight:bold;
+				color : #CCC;
+				font-weight : bold;
 			}
 
 			.code
 			{
 				line-height : 1;
-				font-family : "mono";
+				font-family : "Ricty Diminished";
+				font-weight : normal;
 				background : #333;
 				border : 1px solid #444;
 				border-radius : 4px;
@@ -69,64 +58,64 @@
 
 			.input
 			{
-				position:absolute;
-				border:0;
-				background:#444444;
-				height:16px;
-				padding:4px;
-				margin:4px;
-				text-align:left;
-				font-size:16px;
-				font-family:'mono';
-				border-radius:2px;
-				opacity:.7;
+				position : absolute;
+				border : 0;
+				background : #444444;
+				height : 16px;
+				padding : 4px;
+				margin : 4px;
+				text-align : left;
+				font-size : 16px;
+				font-family : "Ricty Diminished";
+				border-radius : 2px;
+				opacity : .7;
 			}
 
 			#inputMain
 			{
-				left:0px;
-				bottom:28px;
+				left : 0px;
+				bottom : 28px;
 			}
 
 			#inputPrint
 			{
-				bottom:0px;
+				bottom : 0px;
 			}
 
 			#inputHead
 			{
-				bottom:0px;
+				bottom : 0px;
 			}
 
 			#inputFoot
 			{
-				bottom:0px;
+				bottom : 0px;
 			}
 
 			#inputColor
 			{
-				bottom:0px;
+				bottom : 0px;
 			}
 
 			#inputSound
 			{
-				bottom:0px;
+				bottom : 0px;
 			}
 
 			#inputPage
 			{
-				width:32px;
-				right:-50px;
-				bottom:56px;
-				text-align:right;
+				width : 32px;
+				right : -50px;
+				bottom : 56px;
+				text-align : right;
 			}
 
 			#inputs
 			{
-				position:fixed;
-				left:0px;
-				bottom:-56px;
-				width:100%;
+				position : fixed;
+				left : 0px;
+				bottom : -56px;
+				width : 100%;
 			}
 
 			#frame
@@ -141,36 +130,36 @@
 
 			#help
 			{
-				color:#FFFFFF;
-				position:fixed;
-				left:-10px;
-				top:8px;
-				opacity:0;
-				font-family:"mono";
+				color : #FFFFFF;
+				position : fixed;
+				left : -10px;
+				top : 8px;
+				opacity : 0;
+				font-family : "Ricty Diminished";
 			}
 
 			#command
 			{
-				position:fixed;
-				text-align:center;
-				font-size:128px;
-				font-family:"fami";
-				line-height:1.2;
-				color:#FFFFFF;
-				opacity:1;
-				display:none;
+				position : fixed;
+				text-align : center;
+				font-size : 128px;
+				font-family : "FAMania";
+				line-height : 1.2;
+				color : #FFFFFF;
+				opacity : 1;
+				display : none;
 			}
 
 			#commandBg
 			{
-				position:fixed;
-				left:0;
-				top:0;
-				width:100%;
-				height:100%;
-				background:#000000;
-				opacity:.7;
-				display:none;
+				position : fixed;
+				left : 0;
+				top : 0;
+				width : 100%;
+				height : 100%;
+				background : #000000;
+				opacity : .7;
+				display : none;
 			}
 		</style>
 	</head>
@@ -259,8 +248,8 @@
 								if( s == 'f' ){
 									if( v == 'b' ){ v = '\'Bebas Neue\''; }
 									if( v == 'c' ){ v = '\'Comic Sans MS\''; }
-									if( v == 'f' ){ v = '\'fami\''; }
-									if( v == 'm' ){ v = '\'mono\''; }
+									if( v == 'f' ){ v = '\'FAMania\''; }
+									if( v == 'm' ){ v = '\'Ricty Diminished\''; }
 									r += 'font-family:' + v + ';';
 								}
 								if( s == 'b' ){ r += 'background:##' + v + ';'; }
