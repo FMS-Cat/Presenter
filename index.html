@@ -202,8 +202,8 @@
 		<audio src="" id="sound"></audio>
 		<div id="commandBg"></div>
 		<div id="command"></div>
-		<script src="core/jquery.js"></script>
-		<script src="core/jquery.easing.js"></script>
+		<script src="lib/jquery.js"></script>
+		<script src="lib/jquery.easing.js"></script>
 		<script>
 
 			$( function(){
@@ -215,16 +215,37 @@
 					color : "",
 					sound : ""
 				}
+				var autoSave = true;
 
 				var data = loadData(
 					JSON.parse( localStorage. getItem( 'presenterData' ) ),
 					{
 						title : 'Untitled',
-						font : '700 64px/1.2 Helvetica Neue',
+						font : '700 12px/1.2 Helvetica Neue ヒラギノ角ゴ',
 						slides : [$.extend(true,{},template)]
 					}
 				);
-				localStorage.setItem( 'presenterData', JSON.stringify( data ) );
+
+				(function(){
+	        var regexp = /#(.+)/.exec( location.href );
+	        if( regexp ){
+						autoSave = false;
+	          var xhr = new XMLHttpRequest();
+						xhr.open( 'GET', regexp[1] );
+						xhr.onload = function( _e ){
+							data = loadData(
+								JSON.parse( xhr.responseText ),
+								{
+									title : 'Untitled',
+									font : '700 12px/1.2 Helvetica Neue ヒラギノ角ゴ',
+									slides : [$.extend(true,{},template)]
+								}
+							);
+							turn(0);
+						}
+						xhr.send();
+	        }
+	      }());
 
 				function txt( _i ){
 					var ret = _i;
@@ -271,6 +292,7 @@
 					while( /<\/span><span><\/span><span>/.test( ret ) ){
 						ret = ret.replace( /<\/span><span><\/span><span>/, '#' );
 					}
+
 					return '<span>' + ret + '</span>';
 				}
 
@@ -302,7 +324,7 @@
 				function turn( _page ){
 					if( _page < 0 || data.slides.length <= _page ){ return; }
 					page = _page;
-					console.log( page+1 + " / " + data.slides.length + " : " + Math.floor( page/(data.slides.length-1)*100 )+" %" );
+					console.log( Number(page)+1 + " / " + data.slides.length + " : " + Math.floor( page/(data.slides.length-1)*100 )+" %" );
 					$( '#inputPage' ).val( page );
 
 					var main = data.slides[ page ].main;
@@ -331,6 +353,13 @@
 					resize();
 				}
 				turn( 0 );
+
+				function lsSave(){
+					if( autoSave ){
+						localStorage.setItem( 'presenterData', JSON.stringify( data ) );
+					}
+					resize();
+				}
 
 				function load(){
 					var input = document.createElement( 'input' );
@@ -423,14 +452,12 @@
 							if( command == 'TITLE' ){
 								var title = prompt( 'Enter the title', data.title );
 								data.title = title;
-								localStorage.setItem( 'presenterData', JSON.stringify( data ) );
-								resize();
+								lsSave();
 							}
 							if( command == 'FONT' ){
 								var font = prompt( 'Enter the font settings', data.font );
 								if( font ){ data.font = font; }
-								localStorage.setItem( 'presenterData', JSON.stringify( data ) );
-								resize();
+								lsSave();
 							}
 							if( command == 'FIRST' ){
 								turn( 0 );
@@ -498,8 +525,7 @@
 								if( confirm( 'Delete: Really?' ) ){
 									turn( page-1 );
 									data.slides.splice( page+1, 1 );
-									localStorage.setItem( 'presenterData', JSON.stringify( data ) );
-									resize();
+									lsSave();
 								}
 							}
 							_e.preventDefault();
@@ -507,15 +533,14 @@
 						if( k == 77 ){ // m
 							data.slides.splice( page+1, 0, $.extend( true, {}, data.slides[ page ] ) );
 							turn( page+1 );
-							localStorage.setItem( 'presenterData', JSON.stringify( data ) );
-							resize();
+							lsSave();
 							_e.preventDefault();
 						}
 					}else if( !$( ':focus' ).is( '.input' ) ){
-						if( k == 37 ){ // left
+						if( k == 37 || k == 8 ){ // left, backspace
 							turn( page-1 );
 						}
-						if( k == 39 ){ // right
+						if( k == 39 || k == 13 || k == 32 ){ // right, enter, space
 							turn( page+1 );
 						}
 
@@ -585,49 +610,45 @@
 					var main = $( '#inputMain' ).val();
 					$( '#main' ).html( txt( main ) );
 					data.slides[ page ].main = main;
-					localStorage.setItem( 'presenterData', JSON.stringify( data ) );
-					resize();
+					lsSave();
 				} );
 
 				$( document ).on( 'keydown keyup change', '#inputHead', function( _e ){
 					var head = $( '#inputHead' ).val();
 					$( '#head' ).html( txt( head ) );
 					data.slides[ page ].head = head;
-					localStorage.setItem( 'presenterData', JSON.stringify( data ) );
-					resize();
+					lsSave();
 				});
 
 				$( document ).on( 'keydown keyup change', '#inputFoot', function( _e ){
 					var foot = $( '#inputFoot' ).val();
 					$( '#foot' ).html( txt( foot ) );
 					data.slides[ page ].foot = foot;
-					localStorage.setItem( 'presenterData', JSON.stringify( data ) );
+					lsSave();
 					resize();
 				});
 
 				$( document ).on( 'keydown keyup change', '#inputPrint', function( _e ){
 					var print = $( '#inputPrint' ).val();
 					data.slides[ page ].print = print;
-					localStorage.setItem( 'presenterData', JSON.stringify( data ) );
-					resize();
+					lsSave();
 				});
 
 				$( document ).on( 'keydown keyup change', '#inputColor', function( _e ){
 					var color = $( '#inputColor' ).val();
 					$( 'body' ).css( { background : colorFunc( color )  } );
 					data.slides[ page ].color = color;
-					localStorage.setItem( 'presenterData', JSON.stringify( data ) );
-					resize();
+					lsSave();
 				});
 
 				$( document ).on( 'keydown keyup change', '#inputSound', function( _e ){
 					var sound = $( '#inputSound' ).val();
 					data.slides[ page ].sound = sound;
-					localStorage.setItem( 'presenterData', JSON.stringify( data ) );
-					resize();
+					lsSave();
 				});
 
 				$( document ).on( 'keydown', '#inputPage', function( _e ){
+					var k = _e.keyCode;
 					if( k == 13 ){
 						turn( $( '#inputPage' ).val() );
 					}
