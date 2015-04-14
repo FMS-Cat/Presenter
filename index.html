@@ -244,6 +244,9 @@
 							turn(0);
 						}
 						xhr.send();
+
+						helpIsVisible = true;
+						$( '#help' ).stop().animate( { left : 10, opacity : .4 }, 200, 'easeOutCubic' );
 	        }
 	      }());
 
