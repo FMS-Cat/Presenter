@@ -510,7 +510,7 @@
 
 						_e.preventDefault();
 						resize();
-					}else if( _e.metaKey ){
+					}else if( _e.metaKey || _e.ctrlKey ){
 						if( $( ':focus' ).is( '.input' ) ){
 							if( k == 37 ){ // left
 								if( _e.shiftKey ){ data.slides.splice( page-1, 2, data.slides[ page ], data.slides[ page-1 ] ); }
